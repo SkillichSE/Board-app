@@ -24,11 +24,14 @@ button.on{background:var(--acc);color:#fff}
 #dock button{width:44px;height:40px;flex:none}
 #dock button b,#fab b{display:none}
 #dock svg,#more svg,#fab svg{width:22px;height:22px}
-#sepS{display:none}.inl #sepS{display:block}
-.inl #style,.inl #erp{position:static;transform:none;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:0;flex:none;width:590px;justify-content:center}
-.inl #style{display:flex!important}.inl #erp{display:none!important}
-.inl.er #style{display:none!important}.inl.er #erp{display:flex!important}
-.inl.nost #style{opacity:.45}
+.grp{display:flex;gap:6px;align-items:center}
+#zl,#zr{display:flex;align-items:center;flex:1 1 0;gap:6px}
+#zl{justify-content:flex-end;padding-right:12px}#zr{justify-content:flex-start;padding-left:12px}
+#zc{display:flex;align-items:center;gap:2px;flex:none}
+.inl #style{display:none!important}
+.inl #erp{position:static;transform:none;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:0;flex:none;display:none!important}
+.inl.er #erp{display:flex!important}.inl.er #sw{display:none}
+.inl.nost #zl{opacity:.45}
 #dock hr{width:1px;height:24px;border:0;border-left:1px solid var(--bd);margin:0 4px;flex:none}
 #style,#erp{left:50%;bottom:calc(var(--dh) + 12px);transform:translateX(-50%);padding:4px 8px;display:flex;gap:6px;align-items:center;border-radius:8px}
 #erp{display:none}
@@ -62,7 +65,7 @@ button.on{background:var(--acc);color:#fff}
 #hint{position:absolute;bottom:calc(var(--dh) + 12px);left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:8px;font-size:15px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:6}
 </style></head>
 <body><div id="app"><div id="wrap"><canvas id="c"></canvas>
-<div id="style" class="panel"><button class="sw on" data-c="#212529"><i style="background:var(--pen0)"></i></button><button class="sw" data-c="#e03131"><i style="background:#ff6b6b"></i></button><button class="sw" data-c="#1c7ed6"><i style="background:#4dabf7"></i></button><button class="sw" data-c="#2f9e44"><i style="background:#51cf66"></i></button><button class="sw" data-c="#f08c00"><i style="background:#ffa94d"></i></button><button class="sw" data-c="#9c36b5"><i style="background:#da77f2"></i></button><button id="rgbb" class="sw2" data-a="rgb"><i style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></i></button><div id="rec" style="display:flex;gap:8px"></div><div class="vs"></div><div class="ws"><button data-w="0"><u style="width:4px;height:4px"></u></button><button data-w="1" class="on"><u style="width:8px;height:8px"></u></button><button data-w="2"><u style="width:14px;height:14px"></u></button><button data-w="3"><u style="width:22px;height:22px"></u></button></div></div>
+<div id="style" class="panel"><div id="sc" class="grp"><button class="sw on" data-c="#212529"><i style="background:var(--pen0)"></i></button><button class="sw" data-c="#e03131"><i style="background:#ff6b6b"></i></button><button class="sw" data-c="#1c7ed6"><i style="background:#4dabf7"></i></button><button class="sw" data-c="#2f9e44"><i style="background:#51cf66"></i></button><button class="sw" data-c="#f08c00"><i style="background:#ffa94d"></i></button><button class="sw" data-c="#9c36b5"><i style="background:#da77f2"></i></button><button id="rgbb" class="sw2" data-a="rgb"><i style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></i></button><div id="rec" style="display:flex;gap:8px"></div></div><div id="sw" class="grp"><div class="vs"></div><div class="ws"><button data-w="0"><u style="width:4px;height:4px"></u></button><button data-w="1" class="on"><u style="width:8px;height:8px"></u></button><button data-w="2"><u style="width:14px;height:14px"></u></button><button data-w="3"><u style="width:22px;height:22px"></u></button></div></div></div>
 <div id="rgb" class="panel">
  <canvas id="wheel" width="240" height="240"></canvas>
  <input id="vb" type="range" min="0" max="100" value="100">
@@ -83,8 +86,7 @@ button.on{background:var(--acc);color:#fff}
 <button id="fab" class="panel" data-a="show"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><b>Меню</b></button>
 <input id="file" type="file" multiple hidden>
 <div id="hint"></div></div>
-<div id="dock" class="panel">
-<hr id="sepS">
+<div id="dock" class="panel"><div id="zl"></div><div id="zc">
 <button data-a="pen" class="on"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg><b>Перо</b></button>
 <button data-a="er"><svg viewBox="0 0 24 24"><path d="M4 16l9-9 6 6-6 6H8z"/><path d="M9 11l6 6"/></svg><b>Ластик</b></button>
 <button data-a="sel"><svg viewBox="0 0 24 24"><path d="M6 3l12 8-6 1.5L9 19z"/></svg><b>Выбрать</b></button>
@@ -110,7 +112,7 @@ button.on{background:var(--acc);color:#fff}
 <button data-a="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg><b>Вид</b></button>
 <button data-a="clr"><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg><b>Очистить</b></button>
 <button data-a="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg><b>Ещё</b></button>
-</div></div>
+</div><div id="zr"></div></div></div>
 <script>
 /**
  * @licstart The following is the entire license notice for the
@@ -613,9 +615,9 @@ cv.addEventListener('pointerleave',()=>{if(hov){hov=null;draw()}});
 cv.addEventListener('pointerup',e=>{if(e.pointerType==='touch'&&hov){hov=null;draw()}});
 document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{S.ew=+b.dataset.e;document.querySelectorAll('[data-e]').forEach(x=>x.classList.toggle('on',x===b))});
 /* wide screens: colours and widths live inside the dock (one bar); narrow: floating panel */
-function layout(){const d=$('#dock'),st=$('#style'),er=$('#erp'),sp=$('#sepS'),R=document.documentElement.classList;
-  const out=()=>{R.remove('inl');$('#wrap').append(st,er)};out();if(d.style.display==='none')return;
-  R.add('inl');d.insertBefore(st,sp);d.insertBefore(er,sp);if(d.scrollWidth>d.clientWidth+2)out()}
+function layout(){const d=$('#dock'),er=$('#erp'),R=document.documentElement.classList;
+  const out=()=>{R.remove('inl');$('#style').append($('#sc'),$('#sw'));$('#wrap').append(er)};out();if(d.style.display==='none')return;
+  R.add('inl');$('#zl').append($('#sc'));$('#zr').append($('#sw'),er);if(d.scrollWidth>d.clientWidth+2)out()}
 addEventListener('resize',layout);layout();
 document.querySelectorAll('#dock button').forEach(b=>b.title=b.textContent);theme();setTool('pen');resize();
 </script></body></html>
