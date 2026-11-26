@@ -24,6 +24,11 @@ button.on{background:var(--acc);color:#fff}
 #dock button{width:44px;height:40px;flex:none}
 #dock button b,#fab b{display:none}
 #dock svg,#more svg,#fab svg{width:22px;height:22px}
+#sepS{display:none}.inl #sepS{display:block}
+.inl #style,.inl #erp{position:static;transform:none;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:0;flex:none;width:590px;justify-content:center}
+.inl #style{display:flex!important}.inl #erp{display:none!important}
+.inl.er #style{display:none!important}.inl.er #erp{display:flex!important}
+.inl.nost #style{opacity:.45}
 #dock hr{width:1px;height:24px;border:0;border-left:1px solid var(--bd);margin:0 4px;flex:none}
 #style,#erp{left:50%;bottom:calc(var(--dh) + 12px);transform:translateX(-50%);padding:4px 8px;display:flex;gap:6px;align-items:center;border-radius:8px}
 #erp{display:none}
@@ -79,6 +84,7 @@ button.on{background:var(--acc);color:#fff}
 <input id="file" type="file" multiple hidden>
 <div id="hint"></div></div>
 <div id="dock" class="panel">
+<hr id="sepS">
 <button data-a="pen" class="on"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg><b>Перо</b></button>
 <button data-a="er"><svg viewBox="0 0 24 24"><path d="M4 16l9-9 6 6-6 6H8z"/><path d="M9 11l6 6"/></svg><b>Ластик</b></button>
 <button data-a="sel"><svg viewBox="0 0 24 24"><path d="M6 3l12 8-6 1.5L9 19z"/></svg><b>Выбрать</b></button>
@@ -372,7 +378,7 @@ function recog(){
 
 /* ---------- toolbar ---------- */
 const TOOLS=['pen','er','sel','hand','laser','line','circ','pt','tx','ang'];
-function setTool(t){S.tool=t;sel=null;hov=null;angP=[];if(t==='ang')hint('Угол: точка на одной стороне, вершина, точка на другой');if(!['pen','line','circ','pt','tx','ang'].includes(t))rgbClose();$('#erp').style.display=t==='er'?'flex':'none';$('#del').style.display='none';$('#style').style.display=['pen','line','circ','pt','tx','ang'].includes(t)?'flex':'none';document.querySelectorAll('[data-a]').forEach(b=>{if(TOOLS.includes(b.dataset.a))b.classList.toggle('on',b.dataset.a===t)});cv.style.cursor=t==='hand'?'grab':'crosshair'}
+function setTool(t){S.tool=t;const R=document.documentElement.classList;R.toggle('er',t==='er');R.toggle('nost',!['pen','line','circ','pt','tx','ang','er'].includes(t));sel=null;hov=null;angP=[];if(t==='ang')hint('Угол: точка на одной стороне, вершина, точка на другой');if(!['pen','line','circ','pt','tx','ang'].includes(t))rgbClose();$('#erp').style.display=t==='er'?'flex':'none';$('#del').style.display='none';$('#style').style.display=['pen','line','circ','pt','tx','ang'].includes(t)?'flex':'none';document.querySelectorAll('[data-a]').forEach(b=>{if(TOOLS.includes(b.dataset.a))b.classList.toggle('on',b.dataset.a===t)});cv.style.cursor=t==='hand'?'grab':'crosshair'}
 function toggle(b,k){S[k]=!S[k];b.classList.toggle('on',S[k])}
 function openOv(o,b){o.on=!o.on;b.classList.toggle('on',o.on);if(o.on){o.cx=(W/2-V.x)/V.z;o.cy=(H/2-V.y)/V.z;o.a=0;
   if(o===rul)o.w=Math.min(1140,Math.max(380,Math.floor(W/V.z*.7/CM)*CM));hint('Рисуй вдоль края: линия будет ровной. Синий кружок вращает')}draw()}
@@ -407,7 +413,7 @@ const A={rgb:()=>{const p=$('#rgb');if(p.style.display==='flex'){rgbClose();retu
  png:()=>{draw();cv.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='доска.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000)});hint('Картинка сохранена')},
  more:()=>{const m=$('#more');m.style.display=m.style.display==='grid'?'none':'grid'},
  hide:()=>{for(const i of ['dock','style','erp','more','pg','del','rgb'])$('#'+i).style.display='none';$('#fab').style.display='flex';document.documentElement.style.setProperty('--dh','0px')},
- show:()=>{$('#dock').style.display='flex';$('#fab').style.display='none';document.documentElement.style.setProperty('--dh','48px');if(doc)$('#pg').style.display='flex';setTool(S.tool)},
+ show:()=>{$('#dock').style.display='flex';layout();$('#fab').style.display='none';document.documentElement.style.setProperty('--dh','48px');if(doc)$('#pg').style.display='flex';setTool(S.tool)},
  present:()=>{A.hide();try{const r=document.documentElement;if(r.requestFullscreen&&!document.fullscreenElement)r.requestFullscreen().catch(()=>{})}catch(e){}},
  erwhole:b=>{toggle(b,'whole')},
  dark:()=>{S.dark=!S.dark;theme();draw();persist();hint(S.dark?'Тёмная доска':'Светлая доска')},
@@ -606,5 +612,10 @@ cv.addEventListener('pointermove',e=>{if(S.tool==='er'){hov=w2(sp(e));draw()}});
 cv.addEventListener('pointerleave',()=>{if(hov){hov=null;draw()}});
 cv.addEventListener('pointerup',e=>{if(e.pointerType==='touch'&&hov){hov=null;draw()}});
 document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{S.ew=+b.dataset.e;document.querySelectorAll('[data-e]').forEach(x=>x.classList.toggle('on',x===b))});
+/* wide screens: colours and widths live inside the dock (one bar); narrow: floating panel */
+function layout(){const d=$('#dock'),st=$('#style'),er=$('#erp'),sp=$('#sepS'),R=document.documentElement.classList;
+  const out=()=>{R.remove('inl');$('#wrap').append(st,er)};out();if(d.style.display==='none')return;
+  R.add('inl');d.insertBefore(st,sp);d.insertBefore(er,sp);if(d.scrollWidth>d.clientWidth+2)out()}
+addEventListener('resize',layout);layout();
 document.querySelectorAll('#dock button').forEach(b=>b.title=b.textContent);theme();setTool('pen');resize();
 </script></body></html>
